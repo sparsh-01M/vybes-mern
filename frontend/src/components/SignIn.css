@@ -1,0 +1,135 @@
+/* Main container as grid: 2 equal columns for desktop */
+.signIn {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    width: 100vw;
+    background-color: #f5f5f5;
+    position: relative;
+}
+
+/* Left half: Using the ::before pseudo-element for the cloud image */
+.signIn::before {
+    content: "";
+    grid-column: 1;
+    grid-row: 1 / -1;
+    background-image: url("https://res.cloudinary.com/do5w3vlu0/image/upload/v1743454352/img-vXxzucrPdgwm9Wg98QNMa_ikirh4.jpg"); 
+    background-size: cover;
+    background-position: center;
+}
+
+/* Right half: Add another background image behind the form */
+.signIn > div {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background-image: url("https://res.cloudinary.com/do5w3vlu0/image/upload/v1743590435/Untitled_design_1_sfax1j.png"); Replace with actual image */
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Login Form styling */
+.loginForm {
+    width: 80%;
+    max-width: 400px;
+    padding: 40px;
+    background: rgba(224, 231, 232, 0.576); /* Slight transparency */
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(230, 227, 227, 0.846);
+    text-align: center;
+}
+
+/* Logo */
+.signUpLogo {
+    width: 130px;
+    margin-bottom: 20px;
+}
+
+/* Input fields */
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* Login Button */
+#login-btn {
+    width: 100%;
+    background-color: #ff6b6b;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    padding: 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+#login-btn:hover {
+    background-color: #ff4757;
+}
+
+/* Forgot Password */
+.forgot-password {
+    text-align: right;
+    font-size: 14px;
+    color: #25baf5;
+    cursor: pointer;
+}
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Sign-up Link */
+.loginForm2 {
+    text-align: center;
+    margin-top: 15px;
+}
+.loginForm2 span {
+    color: #0fcbe0;
+    cursor: pointer;
+    font-weight: bold;
+}
+.loginForm2 span:hover {
+    text-decoration: underline;
+}
+
+/* RESPONSIVENESS */
+
+/* Tablet: Stack image on top & form on bottom */
+@media screen and (max-width: 768px) {
+    .signIn {
+        display: grid;
+        grid-template-rows: 40vh auto;
+        grid-template-columns: 1fr;
+    }
+    .signIn::before {
+        grid-row: 1;
+        grid-column: 1;
+    }
+    .signIn > div {
+        grid-row: 2;
+        grid-column: 1;
+    }
+}
+
+/* Mobile: Show image on top with a slightly reduced height */
+@media screen and (max-width: 480px) {
+    .signIn {
+        grid-template-rows: 30vh auto;
+    }
+    .signIn > div {
+        background-image: none; /* Remove second background image on mobile */
+    }
+    .loginForm {
+        width: 90%;
+        padding: 30px;
+    }
+}

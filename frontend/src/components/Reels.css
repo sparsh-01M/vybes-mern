@@ -1,0 +1,77 @@
+.reels-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    z-index: 1000;
+  }
+  
+  .reels-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .reel-video-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .reel-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .reel-info {
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    color: white;
+  }
+  
+  .reel-user {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .reel-actions {
+    position: absolute;
+    right: 20px;
+    bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+  }
+  
+  .action-item i {
+    font-size: 28px;
+    margin-bottom: 5px;
+  }
+  
+  .gesture-wheel-wrapper {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+  }

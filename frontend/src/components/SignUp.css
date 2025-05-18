@@ -1,0 +1,115 @@
+/* Full-page background */
+.signUp {
+    height: 100vh;
+    width: 100vw;
+    background-image: url("https://res.cloudinary.com/do5w3vlu0/image/upload/v1743454347/img-tETh77djtPGGUtxhk1jHJ_jgfa7v.jpg");
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Main container to align image left and form right */
+.content-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 50px; /* Space between image and form */
+    width: 80%;
+    max-width: 1000px;
+}
+
+/* Image styling */
+.left-image {
+    width: 50%;
+    max-width: 400px;
+}
+
+/* Centered form container */
+.form-container {
+    background-color: rgba(157, 151, 151, 0.4);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    width: 50%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Logo */
+.signUpLogo {
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+/* Form Inputs */
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #e5d6d6;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* Submit Button */
+#submit-btn {
+    background-color: #ff6b6b;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    padding: 12px;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+#submit-btn:hover {
+    background-color: #ff4757;
+}
+
+/* Terms & Conditions */
+.loginPara {
+    font-size: 14px;
+    color: #fdfdfd;
+    margin-bottom: 10px;
+}
+
+/* Sign In Link */
+.form2 {
+    margin-top: 15px;
+    padding: 15px;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+}
+
+.form2 span {
+    color: #ff6b6b;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.form2 span:hover {
+    text-decoration: underline;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .content-container {
+        flex-direction: column; /* Stack on mobile */
+        align-items: center;
+        gap: 20px;
+    }
+    .left-image {
+        width: 80%;
+        max-width: 300px;
+    }
+    .form-container {
+        width: 90%;
+        padding: 30px;
+    }
+}

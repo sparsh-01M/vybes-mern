@@ -1,0 +1,232 @@
+/* Special Pages Common Styles */
+.special-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: calc(100vh - 80px);
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  color: hsl(var(--accent));
+  font-size: 2.5rem;
+}
+
+.page-title .material-icons {
+  font-size: 2.8rem;
+}
+
+/* AI Bot Page Specific Styles */
+.ai-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.chat-interface {
+  background: hsl(var(--background));
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid hsl(var(--border));
+}
+
+.chat-messages {
+  height: 400px;
+  overflow-y: auto;
+  padding: 1rem;
+  background: hsl(var(--secondary)/0.3);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.bot-message {
+  background: hsl(var(--secondary));
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  max-width: 80%;
+}
+
+.chat-input {
+  display: flex;
+  gap: 1rem;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 0.8rem 1.2rem;
+  border-radius: 25px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+.send-button {
+  background: hsl(var(--accent));
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.send-button:hover {
+  opacity: 0.9;
+}
+
+.ai-features {
+  background: hsl(var(--secondary)/0.2);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid hsl(var(--border));
+}
+
+.ai-features h3 {
+  color: hsl(var(--accent));
+  margin-bottom: 1rem;
+}
+
+.ai-features ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.ai-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  border-radius: 8px;
+  background: hsl(var(--background));
+}
+
+/* Audiobooks Page Specific Styles */
+.audiobooks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.audiobook-card {
+  display: flex;
+  align-items: center;
+  background: hsl(var(--background));
+  padding: 1.2rem;
+  border-radius: 12px;
+  gap: 1.2rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid hsl(var(--border));
+}
+
+.audiobook-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.cover-art {
+  width: 60px;
+  height: 60px;
+  background: hsl(var(--accent)/0.1);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cover-art .material-icons {
+  font-size: 2rem;
+  color: hsl(var(--accent));
+}
+
+.book-info {
+  flex: 1;
+}
+
+.book-info h3 {
+  margin: 0;
+  color: hsl(var(--foreground));
+  font-size: 1.1rem;
+}
+
+.book-info p {
+  margin: 0.3rem 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.9rem;
+}
+
+.duration {
+  color: hsl(var(--accent)) !important;
+  font-weight: 500;
+}
+
+.play-button {
+  background: none;
+  border: none;
+  color: hsl(var(--accent));
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.play-button:hover {
+  background: hsl(var(--accent)/0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ai-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .audiobooks-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-input {
+    flex-direction: column;
+  }
+
+  .send-button {
+    width: 100%;
+  }
+
+  .audiobook-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .play-button {
+    margin-top: 1rem;
+  }
+}
+
+/* Accessibility Focus States */
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid hsl(var(--accent));
+  outline-offset: 2px;
+}
+
+/* Material Icons Adjustments */
+.material-icons {
+  vertical-align: middle;
+  font-size: 1.4rem;
+  aria-hidden: true;
+}
