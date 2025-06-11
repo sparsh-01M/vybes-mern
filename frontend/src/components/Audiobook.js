@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Audiobook.css";
 import { toast } from "react-toastify";
-import config from "../config/config";
+import config from "../config/config.js";
+
 
 export default function Audiobook() {
   const navigate = useNavigate();

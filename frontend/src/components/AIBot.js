@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './AIBot.css';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
+import config from '../config/config';
 
 const SUGGESTED_QUESTIONS = [
   "What are the best practices for learning a new programming language?",
@@ -96,7 +97,7 @@ export default function AIBot() {
   const fetchChats = async () => {
     try {
       console.log('Fetching chats for userId:', userId);
-      const response = await fetch(`http://localhost:4000/chats/${userId}`);
+      const response = await fetch(`${config.BACKEND_URL}/chats/${userId}`);
       console.log('Response status:', response.status);
       
       if (!response.ok) {
@@ -116,7 +117,7 @@ export default function AIBot() {
 
   const fetchChat = async (chatId) => {
     try {
-      const response = await fetch(`http://localhost:4000/chat/${chatId}`);
+      const response = await fetch(`${config.BACKEND_URL}/chat/${chatId}`);
       if (!response.ok) throw new Error('Failed to fetch chat');
       const data = await response.json();
       setCurrentChat(data);
@@ -147,8 +148,8 @@ export default function AIBot() {
     setLoading(true);
     try {
       const url = currentChat 
-        ? `http://localhost:4000/chat/${currentChat._id}/message`
-        : 'http://localhost:4000/chat';
+        ? `${config.BACKEND_URL}/chat/${currentChat._id}/message`
+        : `${config.BACKEND_URL}/chat`;
       
       console.log('Sending request to:', url);
       console.log('Request payload:', {
@@ -202,7 +203,7 @@ export default function AIBot() {
 
   const handleDeleteChat = async (chatId) => {
     try {
-      const response = await fetch(`http://localhost:4000/chat/${chatId}`, {
+      const response = await fetch(`${config.BACKEND_URL}/chat/${chatId}`, {
         method: 'DELETE'
       });
       
@@ -230,7 +231,7 @@ export default function AIBot() {
 
   const handleRenameChat = async (chatId, newTitle) => {
     try {
-      const response = await fetch(`http://localhost:4000/chat/${chatId}/rename`, {
+      const response = await fetch(`${config.BACKEND_URL}/chat/${chatId}/rename`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
