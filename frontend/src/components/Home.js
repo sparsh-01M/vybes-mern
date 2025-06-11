@@ -13,15 +13,14 @@ export default function Home() {
   const [data, setData] = useState([]);
   const [comment, setComment] = useState("");
   const [show, setShow] = useState(false);
-  const [item, setItem] = useState([]);
+  const [item, setItem] = useState(null);
 
   // Toast functions
   const notifyA = (msg) => toast.error(msg);
   const notifyB = (msg) => toast.success(msg);
 
   useEffect(() => {
-    const token = localStorage.getItem("jwt");
-    if (!token) {
+    if (!localStorage.getItem("jwt")) {
       navigate("./signup");
     }
 
@@ -34,9 +33,19 @@ export default function Home() {
       .then((res) => res.json())
       .then((result) => {
         console.log(result);
-        setData(result.posts);
+        // Handle both possible response structures
+        if (Array.isArray(result)) {
+          setData(result);
+        } else if (result && result.posts) {
+          setData(result.posts);
+        } else {
+          setData([]);
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setData([]);
+      });
   }, []);
 
   // to show and hide comments
@@ -160,102 +169,108 @@ export default function Home() {
   return (
     <div className="home">
       {/* card */}
-      {data.map((posts) => {
-        return (
-          <div className="card">
-            {/* card header */}
-            <div className="card-header">
-              <div className="card-pic">
+      {data && data.length > 0 ? (
+        data.map((posts) => {
+          return (
+            <div className="card" key={posts._id}>
+              {/* card header */}
+              <div className="card-header">
+                <div className="card-pic">
+                  {posts.postedBy._id === JSON.parse(localStorage.getItem("user"))?._id ? (
+                    <Link to="/profile">
+                      <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
+                    </Link>
+                  ) : (
+                    <Link to={`/profile/${posts.postedBy._id}`}>
+                      <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
+                    </Link>
+                  )}
+                </div>
                 {posts.postedBy._id === JSON.parse(localStorage.getItem("user"))?._id ? (
                   <Link to="/profile">
-                    <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
+                    <h5>{posts.postedBy.name}</h5>
                   </Link>
                 ) : (
                   <Link to={`/profile/${posts.postedBy._id}`}>
-                    <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
+                    <h5>{posts.postedBy.name}</h5>
                   </Link>
                 )}
               </div>
-              {posts.postedBy._id === JSON.parse(localStorage.getItem("user"))?._id ? (
-                <Link to="/profile">
-                  <h5>{posts.postedBy.name}</h5>
-                </Link>
-              ) : (
-                <Link to={`/profile/${posts.postedBy._id}`}>
-                  <h5>{posts.postedBy.name}</h5>
-                </Link>
-              )}
-            </div>
-            {/* card image */}
-            <div className="card-image">
-              <img src={posts.photo} alt="" />
-            </div>
-
-            {/* card content */}
-            <div className="card-content">
-              <div className="like-container">
-                {posts.likes.includes(
-                  JSON.parse(localStorage.getItem("user"))._id
-                ) ? (
-                  <span
-                    className="material-symbols-outlined material-symbols-outlined-red"
-                    onClick={() => {
-                      unlikePost(posts._id);
-                    }}
-                  >
-                    favorite
-                  </span>
-                ) : (
-                  <span
-                    className="material-symbols-outlined"
-                    onClick={() => {
-                      likePost(posts._id);
-                    }}
-                  >
-                    favorite
-                  </span>
-                )}
-                <span className="likes-count">{posts.likes.length}</span>
+              {/* card image */}
+              <div className="card-image">
+                <img src={posts.photo} alt="" />
               </div>
 
-              <div className="caption-container">
-                <div className="caption-section">
-                  <p className="caption">{posts.body}</p>
+              {/* card content */}
+              <div className="card-content">
+                <div className="like-container">
+                  {posts.likes.includes(
+                    JSON.parse(localStorage.getItem("user"))._id
+                  ) ? (
+                    <span
+                      className="material-symbols-outlined material-symbols-outlined-red"
+                      onClick={() => {
+                        unlikePost(posts._id);
+                      }}
+                    >
+                      favorite
+                    </span>
+                  ) : (
+                    <span
+                      className="material-symbols-outlined"
+                      onClick={() => {
+                        likePost(posts._id);
+                      }}
+                    >
+                      favorite
+                    </span>
+                  )}
+                  <span className="likes-count">{posts.likes.length}</span>
                 </div>
-                <p
-                  className="view-comments"
+
+                <div className="caption-container">
+                  <div className="caption-section">
+                    <p className="caption">{posts.body}</p>
+                  </div>
+                  <p
+                    className="view-comments"
+                    onClick={() => {
+                      toggleComment(posts);
+                    }}
+                  >
+                    View all comments
+                  </p>
+                </div>
+              </div>
+
+              {/* add Comment */}
+              <div className="add-comment">
+                <span className="material-symbols-outlined">mood</span>
+                <input
+                  type="text"
+                  placeholder="Add a comment"
+                  value={comment}
+                  onChange={(e) => {
+                    setComment(e.target.value);
+                  }}
+                />
+                <button
+                  className="comment"
                   onClick={() => {
-                    toggleComment(posts);
+                    makeComment(comment, posts._id);
                   }}
                 >
-                  View all comments
-                </p>
+                  Post
+                </button>
               </div>
             </div>
-
-            {/* add Comment */}
-            <div className="add-comment">
-              <span className="material-symbols-outlined">mood</span>
-              <input
-                type="text"
-                placeholder="Add a comment"
-                value={comment}
-                onChange={(e) => {
-                  setComment(e.target.value);
-                }}
-              />
-              <button
-                className="comment"
-                onClick={() => {
-                  makeComment(comment, posts._id);
-                }}
-              >
-                Post
-              </button>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })
+      ) : (
+        <div className="no-posts">
+          <p>No posts available. Be the first to create a post!</p>
+        </div>
+      )}
 
       {/* show Comment */}
       {show && (
