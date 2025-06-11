@@ -4,6 +4,7 @@ import logo from "../img/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { LoginContext } from "../context/LoginContext";
+import config from "../config/config";
 
 export default function SignIn() {
   const { setUserLogin } = useContext(LoginContext)
@@ -24,7 +25,7 @@ export default function SignIn() {
       return
     }
     // Sending data to server
-    fetch("http://localhost:4000/signin", {
+    fetch(`${config.BACKEND_URL}/signin`, {
       method: "post",
       headers: {
         "Content-Type": "application/json"
