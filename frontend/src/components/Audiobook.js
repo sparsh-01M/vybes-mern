@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Audiobook.css";
 import { toast } from "react-toastify";
+import config from "../config/config";
 
 export default function Audiobook() {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ export default function Audiobook() {
   useEffect(() => {
     const fetchAudiobooks = async () => {
       try {
-        const response = await fetch("${config.BACKEND_URL}/audiobooks");
+        const response = await fetch(`${config.BACKEND_URL}/audiobooks`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
