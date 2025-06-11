@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import config from "../config/config";
+import config from "../config/config.js";
 
 export default function MyFolliwngPost() {
   const navigate = useNavigate();

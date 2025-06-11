@@ -5,7 +5,7 @@ import PostDetail from "./PostDetail";
 import ProfilePic from "./ProfilePic";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import config from "../config/config";
+import config from "../config/config.js";
 
 export default function Profile() {
   const navigate = useNavigate();

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Createpost.css";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-import config from "../config/config";
+import config from "../config/config.js";
 
 export default function Createpost() {
   const [body, setBody] = useState("");
