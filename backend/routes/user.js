@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const POST = mongoose.model("POST");
 const USER = mongoose.model("USER");
-const requireLogin = require("../middlewares/requireLogin");
+const requireLogin = require("../middleware/requireLogin");
 
 // to get user profile
 router.get("/user/:id", (req, res) => {
