@@ -35,7 +35,7 @@ export default function Home() {
         console.log(result);
         // Handle both possible response structures
         if (Array.isArray(result)) {
-          setData(result);
+        setData(result);
         } else if (result && result.posts) {
           setData(result.posts);
         } else {
@@ -171,100 +171,100 @@ export default function Home() {
       {/* card */}
       {data && data.length > 0 ? (
         data.map((posts) => {
-          return (
+        return (
             <div className="card" key={posts._id}>
-              {/* card header */}
-              <div className="card-header">
-                <div className="card-pic">
-                  {posts.postedBy._id === JSON.parse(localStorage.getItem("user"))?._id ? (
-                    <Link to="/profile">
-                      <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
-                    </Link>
-                  ) : (
-                    <Link to={`/profile/${posts.postedBy._id}`}>
-                      <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
-                    </Link>
-                  )}
-                </div>
+            {/* card header */}
+            <div className="card-header">
+              <div className="card-pic">
                 {posts.postedBy._id === JSON.parse(localStorage.getItem("user"))?._id ? (
                   <Link to="/profile">
-                    <h5>{posts.postedBy.name}</h5>
+                    <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
                   </Link>
                 ) : (
                   <Link to={`/profile/${posts.postedBy._id}`}>
-                    <h5>{posts.postedBy.name}</h5>
+                    <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
                   </Link>
                 )}
               </div>
-              {/* card image */}
-              <div className="card-image">
-                <img src={posts.photo} alt="" />
-              </div>
+              {posts.postedBy._id === JSON.parse(localStorage.getItem("user"))?._id ? (
+                <Link to="/profile">
+                  <h5>{posts.postedBy.name}</h5>
+                </Link>
+              ) : (
+                <Link to={`/profile/${posts.postedBy._id}`}>
+                  <h5>{posts.postedBy.name}</h5>
+                </Link>
+              )}
+            </div>
+            {/* card image */}
+            <div className="card-image">
+              <img src={posts.photo} alt="" />
+            </div>
 
-              {/* card content */}
-              <div className="card-content">
-                <div className="like-container">
-                  {posts.likes.includes(
-                    JSON.parse(localStorage.getItem("user"))._id
-                  ) ? (
-                    <span
-                      className="material-symbols-outlined material-symbols-outlined-red"
-                      onClick={() => {
-                        unlikePost(posts._id);
-                      }}
-                    >
-                      favorite
-                    </span>
-                  ) : (
-                    <span
-                      className="material-symbols-outlined"
-                      onClick={() => {
-                        likePost(posts._id);
-                      }}
-                    >
-                      favorite
-                    </span>
-                  )}
-                  <span className="likes-count">{posts.likes.length}</span>
-                </div>
-
-                <div className="caption-container">
-                  <div className="caption-section">
-                    <p className="caption">{posts.body}</p>
-                  </div>
-                  <p
-                    className="view-comments"
+            {/* card content */}
+            <div className="card-content">
+              <div className="like-container">
+                {posts.likes.includes(
+                  JSON.parse(localStorage.getItem("user"))._id
+                ) ? (
+                  <span
+                    className="material-symbols-outlined material-symbols-outlined-red"
                     onClick={() => {
-                      toggleComment(posts);
+                      unlikePost(posts._id);
                     }}
                   >
-                    View all comments
-                  </p>
-                </div>
+                    favorite
+                  </span>
+                ) : (
+                  <span
+                    className="material-symbols-outlined"
+                    onClick={() => {
+                      likePost(posts._id);
+                    }}
+                  >
+                    favorite
+                  </span>
+                )}
+                <span className="likes-count">{posts.likes.length}</span>
               </div>
 
-              {/* add Comment */}
-              <div className="add-comment">
-                <span className="material-symbols-outlined">mood</span>
-                <input
-                  type="text"
-                  placeholder="Add a comment"
-                  value={comment}
-                  onChange={(e) => {
-                    setComment(e.target.value);
-                  }}
-                />
-                <button
-                  className="comment"
+              <div className="caption-container">
+                <div className="caption-section">
+                  <p className="caption">{posts.body}</p>
+                </div>
+                <p
+                  className="view-comments"
                   onClick={() => {
-                    makeComment(comment, posts._id);
+                    toggleComment(posts);
                   }}
                 >
-                  Post
-                </button>
+                  View all comments
+                </p>
               </div>
             </div>
-          );
+
+            {/* add Comment */}
+            <div className="add-comment">
+              <span className="material-symbols-outlined">mood</span>
+              <input
+                type="text"
+                placeholder="Add a comment"
+                value={comment}
+                onChange={(e) => {
+                  setComment(e.target.value);
+                }}
+              />
+              <button
+                className="comment"
+                onClick={() => {
+                  makeComment(comment, posts._id);
+                }}
+              >
+                Post
+              </button>
+            </div>
+          </div>
+        );
         })
       ) : (
         <div className="no-posts">

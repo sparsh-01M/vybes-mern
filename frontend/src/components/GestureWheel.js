@@ -290,7 +290,7 @@ export function GestureWheel() {
       <div className="absolute left-[24px] top-1/2 transform -translate-y-1/2 text-left text-foreground text-lg font-semibold w-24 pl-2" aria-live="polite">
         {segments.find(s => s.id === activeSegment)?.label || ' '}
       </div>
-
+      
       {/* Display reels for the active segment */}
       {activeSegment && (
         <div className="absolute left-[24px] top-1/2 transform -translate-y-1/2 mt-8">

@@ -36,7 +36,7 @@ export default function Audiobook() {
   useEffect(() => {
     const fetchAudiobooks = async () => {
       try {
-        const response = await fetch("http://localhost:4000/audiobooks");
+        const response = await fetch("${config.BACKEND_URL}/audiobooks");
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -79,7 +79,7 @@ export default function Audiobook() {
   const handleSeeMore = async (genre) => {
     try {
       const nextPage = (genrePages[genre] || 1) + 1;
-      const response = await fetch(`http://localhost:4000/audiobooks?genre=${encodeURIComponent(genre)}&page=${nextPage}`);
+      const response = await fetch(`${config.BACKEND_URL}/audiobooks?genre=${encodeURIComponent(genre)}&page=${nextPage}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
