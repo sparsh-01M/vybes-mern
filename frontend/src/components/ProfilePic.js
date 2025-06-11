@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import config from "../config/config";
 
 export default function ProfilePic({ changeprofile }) {
   const hiddenFileInput = useRef(null);
@@ -23,7 +24,7 @@ export default function ProfilePic({ changeprofile }) {
 
   const postPic = () => {
     // saving post to mongodb
-    fetch("http://localhost:4000/uploadProfilePic", {
+    fetch(`${config.BACKEND_URL}/uploadProfilePic`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",

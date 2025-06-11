@@ -4,6 +4,7 @@ import "./Profile.css";
 import { useParams } from "react-router-dom";
 import VideoCard from "./VideoCard";
 import { toast } from "react-toastify";
+import config from "../config/config";
 
 export default function UserProfie() {
   var picLink = "https://cdn-icons-png.flaticon.com/128/3177/3177440.png";
@@ -17,7 +18,7 @@ export default function UserProfie() {
 
   // to follow user
   const followUser = (userId) => {
-    fetch("http://localhost:4000/follow", {
+    fetch(`${config.BACKEND_URL}/follow`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +37,7 @@ export default function UserProfie() {
 
   // to unfollow user
   const unfollowUser = (userId) => {
-    fetch("http://localhost:4000/unfollow", {
+    fetch(`${config.BACKEND_URL}/unfollow`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -62,7 +63,7 @@ export default function UserProfie() {
     try {
       setLoading(true);
       // Fetch user data and posts
-      const userRes = await fetch(`http://localhost:4000/user/${userid}`, {
+      const userRes = await fetch(`${config.BACKEND_URL}/user/${userid}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt"),
         },
@@ -83,7 +84,7 @@ export default function UserProfie() {
 
       // Fetch user's videos with correct endpoint
       try {
-      const videosRes = await fetch(`http://localhost:4000/video/user/${userid}`, {
+      const videosRes = await fetch(`${config.BACKEND_URL}/video/user/${userid}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt"),
         },

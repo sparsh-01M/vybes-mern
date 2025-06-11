@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../App';
+import config from '../config/config';
 import './VideoCard.css';
 
 const VideoCard = ({ video, onVideoUpdate }) => {
@@ -47,7 +48,7 @@ const VideoCard = ({ video, onVideoUpdate }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:4000/like', {
+      const response = await fetch(`${config.BACKEND_URL}/like`, {
         method: 'put',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +69,7 @@ const VideoCard = ({ video, onVideoUpdate }) => {
 
   const handleDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/delete/${video._id}`, {
+      const response = await fetch(`${config.BACKEND_URL}/delete/${video._id}`, {
         method: 'delete',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('jwt')}`

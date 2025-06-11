@@ -5,6 +5,7 @@ import PostDetail from "./PostDetail";
 import ProfilePic from "./ProfilePic";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import config from "../config/config";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ export default function Profile() {
       console.log("Fetching data for user:", userId);
 
       // Fetch user data and posts
-      const userRes = await fetch(`http://localhost:4000/user/${userId}`, {
+      const userRes = await fetch(`${config.BACKEND_URL}/user/${userId}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -99,7 +100,7 @@ export default function Profile() {
 
       // Fetch user's videos with correct endpoint
       console.log("Fetching videos for user:", userId);
-      const videosRes = await fetch(`http://localhost:4000/video/user/${userId}`, {
+      const videosRes = await fetch(`${config.BACKEND_URL}/video/user/${userId}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -146,7 +147,7 @@ export default function Profile() {
   // Follow user
   const followUser = async (userId) => {
     try {
-      const res = await fetch("http://localhost:4000/follow", {
+      const res = await fetch(`${config.BACKEND_URL}/follow`, {
         method: "put",
         headers: {
           "Content-Type": "application/json",
@@ -176,7 +177,7 @@ export default function Profile() {
   // Unfollow user
   const unfollowUser = async (userId) => {
     try {
-      const res = await fetch("http://localhost:4000/unfollow", {
+      const res = await fetch(`${config.BACKEND_URL}/unfollow`, {
         method: "put",
         headers: {
           "Content-Type": "application/json",
@@ -211,7 +212,7 @@ export default function Profile() {
         const userData = JSON.parse(localStorage.getItem("user"));
         const userId = userid || userData._id;
 
-        const videosRes = await fetch(`http://localhost:4000/video/user/${userId}`, {
+        const videosRes = await fetch(`${config.BACKEND_URL}/video/user/${userId}`, {
           headers: {
             Authorization: "Bearer " + token,
           },

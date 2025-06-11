@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./PostDetail.css";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import config from "../config/config";
 
 export default function PostDetail({ item, toggleDetails, isProfilePage = false, activeTab = 'posts' }) {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function PostDetail({ item, toggleDetails, isProfilePage = false,
   useEffect(() => {
     if (item?._id && (!item.postedBy?.Photo || !item.postedBy?.name)) {
       console.log("Fetching post details for post:", item._id);
-      fetch(`http://localhost:4000/post/${item._id}`, {
+      fetch(`${config.BACKEND_URL}/post/${item._id}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt"),
         },
@@ -59,7 +60,7 @@ export default function PostDetail({ item, toggleDetails, isProfilePage = false,
 
   const removePost = (postId) => {
     if (window.confirm("Do you really want to delete this post ?")) {
-      fetch(`http://localhost:4000/deletePost/${postId}`, {
+      fetch(`${config.BACKEND_URL}/deletePost/${postId}`, {
         method: "delete",
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt"),

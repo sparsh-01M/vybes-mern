@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Createpost.css";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import config from "../config/config";
 
 export default function Createpost() {
   const [body, setBody] = useState("");
@@ -20,7 +21,7 @@ export default function Createpost() {
     console.log("Full user data from localStorage:", userData);
     
     // Fetch fresh user data to get the latest profile picture
-    fetch(`http://localhost:4000/user/${userData._id}`, {
+    fetch(`${config.BACKEND_URL}/user/${userData._id}`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("jwt"),
       },
@@ -41,7 +42,7 @@ export default function Createpost() {
     // saving post to mongodb
     if (url) {
 
-      fetch("http://localhost:4000/createPost", {
+      fetch(`${config.BACKEND_URL}/createPost`, {
         method: "post",
         headers: {
           "Content-Type": "application/json",

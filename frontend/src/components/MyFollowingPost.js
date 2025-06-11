@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import config from "../config/config";
 
 export default function MyFolliwngPost() {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export default function MyFolliwngPost() {
     console.log("Current user data:", currentUser);
 
     // Fetching followed users
-    fetch("http://localhost:4000/myfollwingpost", {
+    fetch(`${config.BACKEND_URL}/myfollwingpost`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("jwt"),
       },

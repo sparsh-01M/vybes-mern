@@ -3,6 +3,7 @@ import { UserContext } from '../App';
 import VideoCard from '../components/VideoCard';
 import VideoUploadModal from '../components/VideoUploadModal';
 import { useNavigate } from 'react-router-dom';
+import config from '../config/config';
 import './Videos.css';
 
 const Videos = () => {
@@ -24,7 +25,7 @@ const Videos = () => {
         sort: sortBy
       }).toString();
 
-      const response = await fetch(`http://localhost:4000/allvideos?${queryString}`, {
+      const response = await fetch(`${config.BACKEND_URL}/allvideos?${queryString}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('jwt')}`
         }
