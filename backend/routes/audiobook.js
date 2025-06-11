@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const Audiobook = require("../models/Audiobook");
+const Audiobook = require("../models/audiobook");
 
 // Get all audiobooks with genre grouping
 router.get("/", async (req, res) => {

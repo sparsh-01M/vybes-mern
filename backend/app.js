@@ -15,7 +15,7 @@ require("./models/model");
 require("./models/post");
 require("./models/video");
 require("./models/chat");
-require("./models/Audiobook");
+require("./models/audiobook");
 
 // Import routes
 const audiobookRoutes = require("./routes/audiobook");
