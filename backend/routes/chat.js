@@ -74,9 +74,18 @@ router.post("/chat", async (req, res) => {
       return res.status(400).json({ error: "User ID is required" });
     }
 
-    // Initialize chat model with specified version
+    // Check if API key is available
+    if (!process.env.GEMINI_API_KEY) {
+      console.error("GEMINI_API_KEY not found in environment variables");
+      return res.status(500).json({ 
+        error: "AI service not configured",
+        details: "API key not found"
+      });
+    }
+
+    // Initialize chat model with stable version
     const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-flash-preview-04-17",
+      model: "gemini-1.5-flash",
       generationConfig: {
         temperature: 0.7,
         topK: 40,
@@ -97,9 +106,20 @@ router.post("/chat", async (req, res) => {
     });
 
     // Send message and get response
+    console.log('Sending message to Gemini:', message.substring(0, 50) + '...');
     const result = await chat.sendMessage(message);
     const response = await result.response;
     const text = response.text();
+    console.log('Received response length:', text ? text.length : 0);
+
+    // Validate that we got a valid response
+    if (!text || text.trim() === '') {
+      console.error('Empty response from Gemini API');
+      return res.status(500).json({ 
+        error: "AI response was empty",
+        details: "The AI model returned an empty response. Please try again."
+      });
+    }
 
     // Save chat to database with correct userId field
     const dbChat = new Chat({
@@ -148,9 +168,9 @@ router.post("/chat/:chatId/message", async (req, res) => {
     chat.messageCount += 1;
 
     try {
-      // Initialize chat model with specified version
+      // Initialize chat model with stable version
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.5-flash-preview-04-17",
+        model: "gemini-1.5-flash",
         generationConfig: {
           temperature: 0.7,
           topK: 40,
@@ -177,10 +197,23 @@ router.post("/chat/:chatId/message", async (req, res) => {
       });
       
       // Send message and get response
+      console.log('Sending message to existing chat:', message.substring(0, 50) + '...');
       const result = await aiChat.sendMessage(message);
       const response = await result.response;
       const text = response.text();
-      console.log('Received Gemini response:', text.substring(0, 100) + '...');
+      console.log('Received Gemini response length:', text ? text.length : 0);
+
+      // Validate that we got a valid response
+      if (!text || text.trim() === '') {
+        console.error('Empty response from Gemini API');
+        // Still save the user's message but don't add empty assistant response
+        await chat.save();
+        return res.status(500).json({ 
+          error: "AI response was empty",
+          chat: chat,
+          details: "The AI model returned an empty response. Please try again."
+        });
+      }
 
       // Add assistant's response (store as 'assistant' in our DB)
       chat.messages.push({
