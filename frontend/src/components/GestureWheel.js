@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue } from 'framer-motion';
 import { Book, Briefcase, Clapperboard, Dumbbell, Gamepad2, Utensils } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import config from '../config/config';
 
 const segments = [
   { id: 1, label: 'Education', imageUrl: 'https://res.cloudinary.com/do5w3vlu0/image/upload/v1747310087/20250515_1724_Woman_Immersed_in_Books_simple_compose_01jv9wp0csfcdb5xjjbf5psrpq_neuiqh.png', color: 'hsl(var(--secondary))', activeColor: 'hsl(var(--accent))', path: '/education' },
@@ -118,7 +119,7 @@ export function GestureWheel() {
     if (activeSegment) {
       const segment = segments.find(s => s.id === activeSegment);
       if (segment) {
-        fetch(`http://localhost:4000/reels/${segment.label.toLowerCase()}`)
+        fetch(`${config.BACKEND_URL}/reels/${segment.label.toLowerCase()}`)
           .then(response => response.json())
           .then(data => setReels(data))
           .catch(error => console.error('Error fetching reels:', error));

@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { UserContext } from '../App';
 import './VideoUploadModal.css';
+import config from '../config/config';
 
 const VideoUploadModal = ({ onClose, onUploadSuccess }) => {
   const { state } = useContext(UserContext);
@@ -77,7 +78,7 @@ const VideoUploadModal = ({ onClose, onUploadSuccess }) => {
       formDataToSend.append('thumbnail', formData.thumbnail);
 
       console.log('Sending upload request...');
-      const response = await fetch('http://localhost:4000/upload', {
+      const response = await fetch(`${config.BACKEND_URL}/upload`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('jwt')}`

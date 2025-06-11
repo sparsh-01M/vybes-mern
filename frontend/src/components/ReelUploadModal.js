@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { UserContext } from '../App';
 import './VideoUploadModal.css';
+import config from '../config/config';
 
 const ReelUploadModal = ({ onClose, onUploadSuccess }) => {
   const { state } = useContext(UserContext);
@@ -80,7 +81,7 @@ const ReelUploadModal = ({ onClose, onUploadSuccess }) => {
       formDataToSend.append('category', formData.category);
 
       console.log('Sending reel upload request...');
-      const response = await fetch('http://localhost:4000/upload-reel', {
+      const response = await fetch(`${config.BACKEND_URL}/upload-reel`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('jwt')}`

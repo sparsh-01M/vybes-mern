@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import logo from "../img/logo.png";
 import "./SignUp.css";
 import { Link, useNavigate } from "react-router-dom";
-
 import { toast } from 'react-toastify';
-
+import { LoginContext } from "../context/LoginContext";
+import config from "../config/config";
 
 export default function SignUp() {
+  const { setUserLogin } = useContext(LoginContext)
   const navigate = useNavigate()
   const [name, setName] = useState("");
   const [email, setEmail] = useState("")
@@ -31,7 +32,7 @@ export default function SignUp() {
     }
 
     // Sending data to server
-    fetch("http://localhost:4000/signup", {
+    fetch(`${config.BACKEND_URL}/signup`, {
       method: "post",
       headers: {
         "Content-Type": "application/json"
@@ -41,15 +42,18 @@ export default function SignUp() {
         userName: userName,
         email: email,
         password: password
-
       })
     }).then(res => res.json())
       .then(data => {
         if (data.error) {
           notifyA(data.error)
         } else {
-          notifyB(data.message)
-          navigate("/signin")
+          notifyB("Signed Up Successfully")
+          console.log(data)
+          localStorage.setItem("jwt", data.token)
+          localStorage.setItem("user", JSON.stringify(data.user))
+          setUserLogin(true)
+          navigate("/")
         }
         console.log(data)
       })

@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./Home.css";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { LoginContext } from "../context/LoginContext";
+import config from "../config/config";
 
 export default function Home() {
   var picLink = "https://cdn-icons-png.flaticon.com/128/3177/3177440.png"
   const navigate = useNavigate();
+  const { userLogin, setUserLogin } = useContext(LoginContext)
   const [data, setData] = useState([]);
   const [comment, setComment] = useState("");
   const [show, setShow] = useState(false);
@@ -23,7 +26,7 @@ export default function Home() {
     }
 
     // Fetching all posts
-    fetch("http://localhost:4000/allposts", {
+    fetch(`${config.BACKEND_URL}/allposts`, {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("jwt"),
       },
@@ -31,7 +34,7 @@ export default function Home() {
       .then((res) => res.json())
       .then((result) => {
         console.log(result);
-        setData(result);
+        setData(result.posts);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -42,7 +45,7 @@ export default function Home() {
       setShow(false);
     } else {
       // Fetch fresh post data with populated comments
-      fetch(`http://localhost:4000/post/${posts._id}`, {
+      fetch(`${config.BACKEND_URL}/post/${posts._id}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwt"),
         },
@@ -72,7 +75,7 @@ export default function Home() {
   };
 
   const likePost = (id) => {
-    fetch("http://localhost:4000/like", {
+    fetch(`${config.BACKEND_URL}/like`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -84,6 +87,7 @@ export default function Home() {
     })
       .then((res) => res.json())
       .then((result) => {
+        console.log(result);
         const newData = data.map((posts) => {
           if (posts._id == result._id) {
             return result;
@@ -92,11 +96,10 @@ export default function Home() {
           }
         });
         setData(newData);
-        console.log(result);
       });
   };
   const unlikePost = (id) => {
-    fetch("http://localhost:4000/unlike", {
+    fetch(`${config.BACKEND_URL}/unlike`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -108,6 +111,7 @@ export default function Home() {
     })
       .then((res) => res.json())
       .then((result) => {
+        console.log(result);
         const newData = data.map((posts) => {
           if (posts._id == result._id) {
             return result;
@@ -116,7 +120,6 @@ export default function Home() {
           }
         });
         setData(newData);
-        console.log(result);
       });
   };
 
@@ -127,7 +130,7 @@ export default function Home() {
       return;
     }
 
-    fetch("http://localhost:4000/comment", {
+    fetch(`${config.BACKEND_URL}/comment`, {
       method: "put",
       headers: {
         "Content-Type": "application/json",
@@ -140,6 +143,7 @@ export default function Home() {
     })
       .then((res) => res.json())
       .then((result) => {
+        console.log(result);
         const newData = data.map((posts) => {
           if (posts._id == result._id) {
             return result;
@@ -150,7 +154,6 @@ export default function Home() {
         setData(newData);
         setComment("");
         notifyB("Comment posted");
-        console.log(result);
       });
   };
 
