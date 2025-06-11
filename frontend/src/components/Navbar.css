@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: white;
+    background-color: rgb(125, 66, 18);
     padding: 0.5rem 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
@@ -11,7 +11,7 @@
   .logo {
     margin: 0;
     font-weight: bold;
-    color: #333;
+    color: #f0e8e8;
   }
   
   .nav-menu {
@@ -60,14 +60,14 @@
   
   .hamburger-icon i {
     font-size: 28px;
-    color: #333;
+    color: #e8e1e1;
   }
   
   .dropdown-menu {
     position: absolute;
     top: 45px;
     right: 0;
-    background-color: white;
+    background-color: rgb(252, 197, 144);
     min-width: 200px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -117,20 +117,22 @@
   .nav-button {
     display: flex;
     align-items: center;
-    gap: 5px;
+    justify-content: center;
     color: var(--foreground);
     text-decoration: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition: background-color 0.2s;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    width: 40px;
+    height: 40px;
   }
   
   .nav-button:hover {
-    background-color: var(--secondary);
+    transform: scale(1.1);
   }
   
   .nav-button i {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
   }
   
   .nav-button span {
@@ -138,7 +140,41 @@
     font-weight: 500;
   }
 
-
+  /* Audiobook button styles */
+  .audiobook-button {
+    background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+    color: white;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+  }
+  
+  .audiobook-button:hover {
+    background: linear-gradient(135deg, #FF8E53, #FF6B6B);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  }
+  
+  /* AI Chat button styles */
+  .ai-chat-button {
+    background: linear-gradient(135deg, #4FACFE, #00F2FE);
+    color: white;
+    box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);
+  }
+  
+  .ai-chat-button:hover {
+    background: linear-gradient(135deg, #00F2FE, #4FACFE);
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+  }
+  
+  /* Mobile Responsive Styles */
+  @media screen and (max-width: 768px) {
+    .nav-button {
+      width: 36px;
+      height: 36px;
+    }
+    
+    .nav-button i {
+      font-size: 1.3rem;
+    }
+  }
 
   /* Special Pages Styling */
 .special-page-container {

@@ -41,8 +41,33 @@ export default function Home() {
     if (show) {
       setShow(false);
     } else {
-      setShow(true);
-      setItem(posts);
+      // Fetch fresh post data with populated comments
+      fetch(`http://localhost:4000/post/${posts._id}`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwt"),
+        },
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          console.log("Fetched post details for comments:", {
+            postId: result._id,
+            comments: result.comments?.map(comment => ({
+              id: comment._id,
+              postedBy: comment.postedBy ? {
+                id: comment.postedBy._id,
+                name: comment.postedBy.name,
+                hasPhoto: !!comment.postedBy.Photo,
+                photoUrl: comment.postedBy.Photo
+              } : null
+            }))
+          });
+          setItem(result);
+          setShow(true);
+        })
+        .catch((err) => {
+          console.error("Error fetching post details:", err);
+          notifyA("Error loading comments");
+        });
     }
   };
 
@@ -97,6 +122,11 @@ export default function Home() {
 
   // function to make comment
   const makeComment = (text, id) => {
+    if (!text || text.trim() === "") {
+      notifyA("Comment cannot be empty");
+      return;
+    }
+
     fetch("http://localhost:4000/comment", {
       method: "put",
       headers: {
@@ -133,16 +163,25 @@ export default function Home() {
             {/* card header */}
             <div className="card-header">
               <div className="card-pic">
-                <img
-                  src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink}
-                  alt=""
-                />
+                {posts.postedBy._id === JSON.parse(localStorage.getItem("user"))?._id ? (
+                  <Link to="/profile">
+                    <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
+                  </Link>
+                ) : (
+                  <Link to={`/profile/${posts.postedBy._id}`}>
+                    <img src={posts.postedBy.Photo ? posts.postedBy.Photo : picLink} alt="" />
+                  </Link>
+                )}
               </div>
-              <h5>
-                <Link to={`/profile/${posts.postedBy._id}`}>
-                  {posts.postedBy.name}
+              {posts.postedBy._id === JSON.parse(localStorage.getItem("user"))?._id ? (
+                <Link to="/profile">
+                  <h5>{posts.postedBy.name}</h5>
                 </Link>
-              </h5>
+              ) : (
+                <Link to={`/profile/${posts.postedBy._id}`}>
+                  <h5>{posts.postedBy.name}</h5>
+                </Link>
+              )}
             </div>
             {/* card image */}
             <div className="card-image">
@@ -151,38 +190,44 @@ export default function Home() {
 
             {/* card content */}
             <div className="card-content">
-              {posts.likes.includes(
-                JSON.parse(localStorage.getItem("user"))._id
-              ) ? (
-                <span
-                  className="material-symbols-outlined material-symbols-outlined-red"
-                  onClick={() => {
-                    unlikePost(posts._id);
-                  }}
-                >
-                  favorite
-                </span>
-              ) : (
-                <span
-                  className="material-symbols-outlined"
-                  onClick={() => {
-                    likePost(posts._id);
-                  }}
-                >
-                  favorite
-                </span>
-              )}
+              <div className="like-container">
+                {posts.likes.includes(
+                  JSON.parse(localStorage.getItem("user"))._id
+                ) ? (
+                  <span
+                    className="material-symbols-outlined material-symbols-outlined-red"
+                    onClick={() => {
+                      unlikePost(posts._id);
+                    }}
+                  >
+                    favorite
+                  </span>
+                ) : (
+                  <span
+                    className="material-symbols-outlined"
+                    onClick={() => {
+                      likePost(posts._id);
+                    }}
+                  >
+                    favorite
+                  </span>
+                )}
+                <span className="likes-count">{posts.likes.length}</span>
+              </div>
 
-              <p>{posts.likes.length} Likes</p>
-              <p>{posts.body} </p>
-              <p
-                style={{ fontWeight: "bold", cursor: "pointer" }}
-                onClick={() => {
-                  toggleComment(posts);
-                }}
-              >
-                View all comments
-              </p>
+              <div className="caption-container">
+                <div className="caption-section">
+                  <p className="caption">{posts.body}</p>
+                </div>
+                <p
+                  className="view-comments"
+                  onClick={() => {
+                    toggleComment(posts);
+                  }}
+                >
+                  View all comments
+                </p>
+              </div>
             </div>
 
             {/* add Comment */}
@@ -224,11 +269,26 @@ export default function Home() {
               >
                 <div className="card-pic">
                   <img
-                    src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-                    alt=""
+                    src={item.postedBy?.Photo || picLink}
+                    alt={item.postedBy?.name || "User"}
+                    onError={(e) => {
+                      console.log("Error loading profile picture:", {
+                        user: item.postedBy,
+                        attemptedUrl: item.postedBy?.Photo,
+                        error: e
+                      });
+                      e.target.src = picLink;
+                    }}
+                    style={{ 
+                      width: "40px", 
+                      height: "40px", 
+                      borderRadius: "50%", 
+                      objectFit: "cover",
+                      border: "1px solid #eee"
+                    }}
                   />
                 </div>
-                <h5>{item.postedBy.name}</h5>
+                <h5>{item.postedBy?.name || "User"}</h5>
               </div>
 
               {/* commentSection */}
@@ -236,24 +296,44 @@ export default function Home() {
                 className="comment-section"
                 style={{ borderBottom: "1px solid #00000029" }}
               >
-                {item.comments.map((comment) => {
+                {item.comments?.map((comment) => {
                   return (
-                    <p className="comm">
-                      <span
-                        className="commenter"
-                        style={{ fontWeight: "bolder" }}
-                      >
-                        {comment.postedBy.name}{" "}
-                      </span>
-                      <span className="commentText">{comment.comment}</span>
-                    </p>
+                    <div className="comment-item" key={comment._id}>
+                      <div className="comment-pic">
+                        <img
+                          src={comment.postedBy?.Photo || picLink}
+                          alt={comment.postedBy?.name || "User"}
+                          onError={(e) => {
+                            console.log("Error loading commenter profile picture:", {
+                              user: comment.postedBy,
+                              attemptedUrl: comment.postedBy?.Photo,
+                              error: e
+                            });
+                            e.target.src = picLink;
+                          }}
+                          style={{ 
+                            width: "24px", 
+                            height: "24px", 
+                            borderRadius: "50%", 
+                            objectFit: "cover",
+                            border: "1px solid #eee"
+                          }}
+                        />
+                      </div>
+                      <p className="comm">
+                        <span className="commenter" style={{ fontWeight: "bolder" }}>
+                          {comment.postedBy?.name || "User"}{" "}
+                        </span>
+                        <span className="commentText">{comment.comment}</span>
+                      </p>
+                    </div>
                   );
                 })}
               </div>
 
               {/* card content */}
               <div className="card-content">
-                <p>{item.likes.length} Likes</p>
+                <p>{item.likes?.length || 0} Likes</p>
                 <p>{item.body}</p>
               </div>
 
@@ -272,7 +352,6 @@ export default function Home() {
                   className="comment"
                   onClick={() => {
                     makeComment(comment, item._id);
-                    toggleComment();
                   }}
                 >
                   Post
@@ -283,11 +362,11 @@ export default function Home() {
           <div
             className="close-comment"
             onClick={() => {
-              toggleComment();
+              setShow(false);
             }}
           >
             <span className="material-symbols-outlined material-symbols-outlined-comment">
-              close
+              Close
             </span>
           </div>
         </div>

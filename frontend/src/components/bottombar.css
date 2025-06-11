@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: white;
+    background-color: rgb(125, 66, 18);
     position: fixed;
     bottom: 0;
     left: 0;
@@ -18,7 +18,7 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
-    color: #777;
+    color: #d3cdcd;
     padding: 0.5rem;
     transition: color 0.2s;
     width: 25%;

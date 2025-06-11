@@ -1,0 +1,358 @@
+.audiobook-container {
+  padding: 2rem;
+  max-width: auto;
+  margin: 0 auto;
+}
+
+.audiobook-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+}
+
+.audiobook-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.audiobook-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.audiobook-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.audiobook-thumbnail {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.audiobook-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.audiobook-card:hover .audiobook-thumbnail img {
+  transform: scale(1.05);
+}
+
+/* Meta overlay for mobile */
+.audiobook-meta-overlay {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  color: white;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.audiobook-meta-overlay .audiobook-duration {
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  align-self: flex-start;
+}
+
+.audiobook-meta-overlay .audiobook-rating {
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.audiobook-details {
+  padding: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.audiobook-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.audiobook-author {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+  font-style: italic;
+}
+
+.audiobook-description {
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.audiobook-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.audiobook-duration {
+  background: #f0f0f0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.audiobook-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.star {
+  color: #ddd;
+  font-size: 1.1rem;
+}
+
+.star.filled {
+  color: #ffd700;
+}
+
+.rating-value {
+  color: #666;
+  font-size: 0.9rem;
+  margin-left: 0.3rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.genre-section {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: var(--background-secondary);
+  border-radius: 12px;
+}
+
+.genre-title {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--accent-color);
+}
+
+.see-more-button {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.75rem 2rem;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.see-more-button:hover {
+  background-color: var(--accent-color-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.see-more-button:active {
+  transform: translateY(0);
+}
+
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+  .audiobook-container {
+    padding: 0.5rem;
+  }
+
+  .audiobook-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .genre-section {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+  }
+
+  .genre-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.3rem;
+  }
+
+  .audiobook-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding: 0;
+  }
+
+  .audiobook-thumbnail {
+    height: 200px;
+  }
+
+  .audiobook-details {
+    padding: 0.5rem;
+    gap: 0.4rem;
+  }
+
+  .audiobook-name {
+    font-size: 1.1rem;
+  }
+
+  .audiobook-author {
+    font-size: 0.9rem;
+  }
+
+  .audiobook-description {
+    -webkit-line-clamp: 2;
+    font-size: 0.85rem;
+  }
+
+  /* Show meta overlay on mobile */
+  .audiobook-meta-overlay {
+    display: flex;
+    padding: 8px;
+  }
+
+  .audiobook-meta-overlay .audiobook-duration {
+    font-size: 0.8rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .audiobook-meta-overlay .audiobook-rating {
+    gap: 0.2rem;
+  }
+
+  .audiobook-meta-overlay .star {
+    font-size: 1rem;
+  }
+
+  .audiobook-meta-overlay .rating-value {
+    color: white;
+    font-size: 0.8rem;
+  }
+
+  /* Hide meta section on mobile */
+  .audiobook-meta {
+    display: none;
+  }
+
+  .see-more-button {
+    margin: 0.5rem auto;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Small Mobile Devices */
+@media screen and (max-width: 480px) {
+  .audiobook-container {
+    padding: 0.3rem;
+  }
+
+  .audiobook-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .genre-section {
+    margin-bottom: 0.8rem;
+    padding: 0.3rem;
+  }
+
+  .audiobook-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+  }
+
+  .audiobook-thumbnail {
+    height: 180px;
+  }
+
+  .audiobook-details {
+    padding: 0.4rem;
+    gap: 0.3rem;
+  }
+
+  .audiobook-name {
+    font-size: 1rem;
+  }
+
+  .audiobook-author {
+    font-size: 0.8rem;
+  }
+
+  .audiobook-description {
+    font-size: 0.8rem;
+  }
+
+  .audiobook-meta-overlay {
+    padding: 6px;
+    gap: 3px;
+  }
+
+  .audiobook-meta-overlay .audiobook-duration {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.3rem;
+  }
+
+  .audiobook-meta-overlay .audiobook-rating {
+    gap: 0.15rem;
+  }
+
+  .audiobook-meta-overlay .star {
+    font-size: 0.9rem;
+  }
+
+  .audiobook-meta-overlay .rating-value {
+    font-size: 0.75rem;
+  }
+
+  .see-more-button {
+    margin: 0.4rem auto;
+    padding: 0.4rem 1.2rem;
+    font-size: 0.85rem;
+  }
+} 

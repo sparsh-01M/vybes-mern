@@ -7,12 +7,34 @@ export default function Createpost() {
   const [body, setBody] = useState("");
   const [image, setImage] = useState("")
   const [url, setUrl] = useState("")
+  const [user, setUser] = useState(null)
   const navigate = useNavigate()
 
   // Toast functions
   const notifyA = (msg) => toast.error(msg)
   const notifyB = (msg) => toast.success(msg)
 
+  useEffect(() => {
+    // Get user data from localStorage
+    const userData = JSON.parse(localStorage.getItem("user"));
+    console.log("Full user data from localStorage:", userData);
+    
+    // Fetch fresh user data to get the latest profile picture
+    fetch(`http://localhost:4000/user/${userData._id}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwt"),
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        console.log("Fetched user data:", result.user);
+        setUser(result.user); // Use the fresh user data
+      })
+      .catch(err => {
+        console.error("Error fetching user data:", err);
+        setUser(userData); // Fallback to localStorage data if fetch fails
+      });
+  }, []);
 
   useEffect(() => {
 
@@ -97,11 +119,18 @@ export default function Createpost() {
         <div className="card-header">
           <div className="card-pic">
             <img
-              src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29ufGVufDB8MnwwfHw%3D&auto=format&fit=crop&w=500&q=60"
-              alt=""
+              src={user?.Photo || "https://cdn-icons-png.flaticon.com/128/3177/3177440.png"}
+              alt={user?.name}
+              onError={(e) => {
+                console.log("Error loading profile picture. User data:", user);
+                console.log("Attempted photo URL:", user?.Photo);
+                console.log("Error details:", e);
+                e.target.src = "https://cdn-icons-png.flaticon.com/128/3177/3177440.png";
+              }}
+              style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }}
             />
           </div>
-          <h5>Ramesh</h5>
+          <h5>{user?.name || "User"}</h5>
         </div>
         <textarea value={body} onChange={(e) => {
           setBody(e.target.value)

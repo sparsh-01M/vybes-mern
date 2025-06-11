@@ -1,57 +1,464 @@
 .showComment {
-  width: 100vw;
+  width: 100%;
   min-height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(16, 13, 13, 0.4);
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 1000;
+  padding: 20px 0 180px 0;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .container {
   display: flex;
   width: 80%;
+  max-width: 1200px;
+  min-height: calc(100vh - 200px);
+  max-height: calc(100vh - 200px);
   background-color: white;
-  position: absolute;
-  top: 10%;
-  left: 10%;
-  height: 500px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  position: relative;
+  margin: 20px auto;
 }
 
+/* Left side - Post Image */
 .postPic {
-  background-color: black;
+  flex: 1;
+  background-color: #f8f9fa;
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-right: 1px solid #e0e0e0;
+  position: relative;
+  overflow: hidden;
+}
+
+.postPic::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, #e0e0e0, transparent);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .postPic img {
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
-  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Right side - Details */
 .details {
-  width: 100%;
-  height: inherit;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  background-color: white;
+  overflow-y: auto;
+  padding: 20px;
 }
 
+/* Card Header */
+.card-header {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.card-pic {
+  margin-right: 15px;
+}
+
+.card-pic img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header h5 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #262626;
+  font-weight: 600;
+}
+
+/* Comment Section */
 .comment-section {
-  flex-grow: 4;
-  text-align: left;
-  margin-left: 10px;
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+  margin-bottom: 15px;
 }
 
-.close-comment {
-  position: fixed;
-  top: 1%;
-  right: 5%;
-  color: white;
+.comment-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.comment-pic {
+  margin-right: 12px;
+}
+
+.comment-pic img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #e0e0e0;
+}
+
+.comm {
+  flex: 1;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.commenter {
+  color: #262626;
+  font-weight: 600;
+  margin-right: 5px;
+}
+
+.commentText {
+  color: #262626;
+}
+
+/* Card Content */
+.card-content {
+  padding: 15px 5px;
+  border-top: 1px solid #e0e0e0;
+  margin-bottom: 0px;
+  text-align: left;
+}
+
+.card-content p {
+  margin: 8px 0;
+  color: #262626;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  max-width: 100%;
+}
+
+.card-content p:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  font-weight: 600;
+  color: #262626;
+}
+
+
+.card-content p:last-child {
+  font-size: 0.95rem;
+  color: #262626;
+  text-align: left;
+  margin: 12px 0;
+  padding: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Add Comment Section */
+.add-comment {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  padding-bottom: 40px;
+  border-top: 1px solid #e0e0e0;
+  background-color: white;
+  width: 100%;
+}
+
+.add-comment input {
+  flex: 1;
   border: none;
+  outline: none;
+  padding: 8px 12px;
+  margin: 0 10px;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.add-comment button {
+  border: none;
+  background-color: #0095f6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.add-comment button:hover {
+  background-color: #0081d6;
+}
+
+.add-comment .material-symbols-outlined {
+  color: #8e8e8e;
+  font-size: 24px;
   cursor: pointer;
 }
 
-.deletePost {
+/* Close Button */
+.close-comment {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 20px;
+  background-color: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.close-comment:hover {
+  background-color: #f8f9fa;
+}
+
+.material-symbols-outlined-comment {
+  font-size: 24px;
+  color: #262626;
+}
+
+/* Like Button Styles */
+.material-symbols-outlined {
+  cursor: pointer;
+  color: #262626;
+  font-size: 24px;
+  transition: color 0.2s;
+}
+
+.material-symbols-outlined:hover {
+  color: #ed4956;
+}
+
+.material-symbols-outlined-red {
+  color: #ed4956;
+}
+
+/* Delete Post Button */
+.deletePost {
+  margin-left: auto;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.deletePost:hover {
+  background-color: #f8f9fa;
+}
+
+.deletePost .material-symbols-outlined {
+  color: #ed4956;
+  font-size: 20px;
+}
+
+/* Scrollbar Styling */
+.details::-webkit-scrollbar {
+  width: 6px;
+}
+
+.details::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.details::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.details::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+  .showComment {
+    padding: 10px 0 170px 0;
+    align-items: flex-start;
+  }
+
+  .container {
+    width: 100%;
+    min-height: calc(100vh - 190px);
+    max-height: calc(100vh - 190px);
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .postPic {
+    width: 100%;
+    height: 40vh;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0;
+  }
+
+  .details {
+    width: 100%;
+    height: calc(60vh - 60px);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  /* Hide card content (likes and caption) on mobile */
+  .details .card-content {
+    display: none;
+  }
+
+  /* Optimize comment section for mobile */
+  .comment-section {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    overflow-y: auto;
+    margin-bottom: 60px; /* Space for add comment section */
+  }
+
+  .comment-item {
+    padding: 8px 0;
+    margin-bottom: 12px;
+    background-color: transparent;
+  }
+
+  .comment-pic img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .comm {
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  /* Adjust add comment section */
+  .add-comment {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 12px;
+    border-top: 1px solid #e0e0e0;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .add-comment input {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
+
+  .add-comment button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}
+
+/* Small Mobile Devices */
+@media screen and (max-width: 480px) {
+  .showComment {
+    padding: 10px 0 160px 0;
+  }
+
+  .container {
+    min-height: calc(100vh - 70px);
+    max-height: calc(100vh - 100px);
+  }
+
+  .postPic {
+    height: 35vh;
+  }
+
+  .details {
+    height: calc(65vh - 50px);
+  }
+
+  .comment-item {
+    padding: 6px 0;
+  }
+
+  .comment-pic img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .comm {
+    font-size: 0.85rem;
+  }
+
+  .commenter {
+    font-size: 0.85rem;
+  }
+
+  .commentText {
+    font-size: 0.85rem;
+  }
+
+  .add-comment {
+    padding: 10px;
+  }
+
+  .add-comment input {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+
+  .add-comment button {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+}
+
+/* Ensure proper scrolling on all devices */
+.comment-section::-webkit-scrollbar {
+  width: 4px;
+}
+
+.comment-section::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.comment-section::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 2px;
+}
+
+.comment-section::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
