@@ -77,6 +77,35 @@ const MessageContent = ({ content }) => {
   );
 };
 
+// Loading Animation Component
+const LoadingAnimation = () => {
+  return (
+    <div className="loading-message">
+      <div className="message-content">
+        <div className="message-header">
+          <i className="material-icons">smart_toy</i>
+          <span>AI Assistant</span>
+        </div>
+        <div className="loading-content">
+          <div className="typing-indicator">
+            <div className="typing-dot"></div>
+            <div className="typing-dot"></div>
+            <div className="typing-dot"></div>
+          </div>
+          <div className="loading-text">
+            <span className="loading-message-text">Thinking</span>
+            <span className="loading-dots">
+              <span className="dot">.</span>
+              <span className="dot">.</span>
+              <span className="dot">.</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function AIBot() {
   const navigate = useNavigate();
   const [chats, setChats] = useState([]);
@@ -88,11 +117,41 @@ export default function AIBot() {
   const [editingChatId, setEditingChatId] = useState(null);
   const [editingTitle, setEditingTitle] = useState('');
   const editInputRef = useRef(null);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
 
   // Fetch user's chat history
   useEffect(() => {
     fetchChats();
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (activeDropdown && !event.target.closest('.dropdown-menu') && !event.target.closest('.dropdown-toggle')) {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [activeDropdown]);
+
+  // Close mobile sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMobileSidebarOpen && !event.target.closest('.ai-bot-sidebar') && !event.target.closest('.mobile-menu-toggle')) {
+        setIsMobileSidebarOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileSidebarOpen]);
 
   const fetchChats = async () => {
     try {
@@ -128,16 +187,42 @@ export default function AIBot() {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // Fallback: scroll the messages container directly
+      const messagesContainer = document.querySelector('.messages-container');
+      if (messagesContainer) {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+    }
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [currentChat?.messages]);
 
+  // Scroll to bottom when loading state changes
+  useEffect(() => {
+    if (loading) {
+      // Small delay to ensure the loading animation is rendered
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+    }
+  }, [loading]);
+
+  // Scroll to bottom when a new chat is selected
+  useEffect(() => {
+    if (currentChat) {
+      scrollToBottom();
+    }
+  }, [currentChat?._id]);
+
   const handleNewChat = async () => {
     setCurrentChat(null);
     setMessage('');
+    setIsMobileSidebarOpen(false); // Close sidebar on mobile when starting new chat
   };
 
   const handleSendMessage = async (e) => {
@@ -146,6 +231,12 @@ export default function AIBot() {
 
     console.log('Sending message:', message);
     setLoading(true);
+    
+    // Scroll to bottom immediately when user sends message
+    setTimeout(() => {
+      scrollToBottom();
+    }, 50);
+    
     try {
       const url = currentChat 
         ? `${config.BACKEND_URL}/chat/${currentChat._id}/message`
@@ -283,9 +374,38 @@ export default function AIBot() {
     }
   };
 
+  const toggleMobileSidebar = () => {
+    setIsMobileSidebarOpen(!isMobileSidebarOpen);
+  };
+
+  const closeMobileSidebar = () => {
+    setIsMobileSidebarOpen(false);
+  };
+
+  const toggleDropdown = (chatId, e) => {
+    e.stopPropagation();
+    setActiveDropdown(activeDropdown === chatId ? null : chatId);
+  };
+
+  const handleChatClick = (chatId) => {
+    fetchChat(chatId);
+    setIsMobileSidebarOpen(false); // Close sidebar on mobile when selecting chat
+    setActiveDropdown(null); // Close any open dropdown
+  };
+
   return (
     <div className="ai-bot-container">
-      <div className="ai-bot-sidebar">
+      {/* Mobile Hamburger Menu */}
+      <button className="mobile-menu-toggle" onClick={toggleMobileSidebar}>
+        <i className="material-icons">menu</i>
+      </button>
+
+      {/* Mobile Sidebar Overlay */}
+      {isMobileSidebarOpen && (
+        <div className="mobile-sidebar-overlay" onClick={closeMobileSidebar}></div>
+      )}
+
+      <div className={`ai-bot-sidebar ${isMobileSidebarOpen ? 'mobile-open' : ''}`}>
         <button className="new-chat-button" onClick={handleNewChat}>
           <i className="material-icons">add</i>
           New Chat
@@ -297,7 +417,7 @@ export default function AIBot() {
                 key={chat._id} 
                 className={`chat-item ${currentChat?._id === chat._id ? 'active' : ''}`}
               >
-                <div className="chat-item-content">
+                <div className="chat-item-content" onClick={() => handleChatClick(chat._id)}>
                   <i className="material-icons">chat</i>
                   {editingChatId === chat._id ? (
                     <input
@@ -311,16 +431,15 @@ export default function AIBot() {
                       onClick={(e) => e.stopPropagation()}
                     />
                   ) : (
-                    <span 
-                      className="chat-title"
-                      onClick={() => fetchChat(chat._id)}
-                    >
+                    <span className="chat-title">
                       {chat.title}
                     </span>
                   )}
                   <span className="chat-date">{formatDate(chat.updatedAt)}</span>
                 </div>
-                <div className="chat-actions">
+                
+                {/* Desktop Actions */}
+                <div className="chat-actions desktop-only">
                   <button 
                     className="rename-chat-button"
                     onClick={(e) => {
@@ -339,6 +458,42 @@ export default function AIBot() {
                   >
                     <i className="material-icons">delete</i>
                   </button>
+                </div>
+
+                {/* Mobile Actions Dropdown */}
+                <div className="chat-actions mobile-only">
+                  <button 
+                    className="dropdown-toggle"
+                    onClick={(e) => toggleDropdown(chat._id, e)}
+                  >
+                    <i className="material-icons">more_vert</i>
+                  </button>
+                  {activeDropdown === chat._id && (
+                    <div className="dropdown-menu">
+                      <button 
+                        className="dropdown-item"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          startEditing(chat);
+                          setActiveDropdown(null);
+                        }}
+                      >
+                        <i className="material-icons">edit</i>
+                        Edit
+                      </button>
+                      <button 
+                        className="dropdown-item"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteChat(chat._id);
+                          setActiveDropdown(null);
+                        }}
+                      >
+                        <i className="material-icons">delete</i>
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))
@@ -388,6 +543,7 @@ export default function AIBot() {
                   </div>
                 </div>
               ))}
+              {loading && <LoadingAnimation />}
               <div ref={messagesEndRef} />
             </div>
           )}

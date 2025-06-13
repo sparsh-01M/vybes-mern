@@ -16,6 +16,7 @@ require("./models/post");
 require("./models/video");
 require("./models/chat");
 require("./models/audiobook");
+require("./models/question");
 
 // Import routes
 const audiobookRoutes = require("./routes/audiobook");
@@ -25,6 +26,7 @@ const authRoutes = require("./routes/auth");
 const createPostRoutes = require("./routes/createPost");
 const userRoutes = require("./routes/user");
 const postRoutes = require("./routes/post");
+const questionRoutes = require("./routes/questions");
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
@@ -57,6 +59,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/vybes', {})
   app.use("/", videoRoutes);
   app.use('/api/auth', authRoutes);
   app.use('/api/posts', postRoutes);
+  app.use('/questions', questionRoutes);
 
   // Error handling middleware
   app.use((err, req, res, next) => {

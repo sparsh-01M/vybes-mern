@@ -1,0 +1,984 @@
+.audiobook-player {
+  min-height: 100vh;
+  background: url('https://res.cloudinary.com/do5w3vlu0/image/upload/v1743101305/samples/coffee.jpg') center center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  position: relative;
+}
+
+.audiobook-player::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(56, 56, 50, 0.5);
+  z-index: 1;
+}
+
+.player-header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 2;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 1rem;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.player-title {
+  margin: 0 0 0 2rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.player-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  gap: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.thumbnail-section {
+  background: transparent;
+  width: 100%;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 3rem;
+  position: relative;
+}
+
+.thumbnail-section::before {
+  display: none;
+}
+
+.thumbnail-container {
+  max-width: 400px;
+  width: 100%;
+  aspect-ratio: 2/3;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.fullscreen-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.fullscreen-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.player-controls {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  color: white;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.player-controls::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(56, 56, 50, 0.5);
+  z-index: 1;
+}
+
+.track-info {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.track-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: white;
+}
+
+.track-author {
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+}
+
+.track-description {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.rating-section {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.average-rating,
+.user-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rating-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.stars-display,
+.stars-input {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.star {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.3);
+  transition: color 0.2s ease;
+}
+
+.star.filled {
+  color: #ffd700;
+}
+
+.stars-input .star:hover {
+  color: #ffd700;
+  transform: scale(1.1);
+}
+
+.rating-value {
+  font-size: 0.8rem;
+}
+
+.rating-submitting {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+  margin-left: 0.5rem;
+}
+
+.progress-container {
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.time-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #31cbee;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.progress-bar::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0a0a0a;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.main-controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.play-pause-button {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #080808, #e5f0f0);
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-pause-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+.play-pause-button i {
+  font-size: 2.5rem;
+  margin-left: 4px; /* Slight offset for play icon */
+}
+
+.secondary-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 2;
+  padding-bottom: 5rem;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.volume-control i {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.volume-slider {
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.2);
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #31cbee;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #31cbee;
+  cursor: pointer;
+  border: none;
+}
+
+.playback-rate-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rate-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+}
+
+.rate-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.rate-button {
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+
+.rate-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.rate-button.active {
+  background: #4ecdc4;
+  border-color: #4ecdc4;
+  color: white;
+}
+
+/* Loading and Error States */
+.audiobook-player-loading,
+.audiobook-player-error {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ce943e 0%, #7613d9 100%);
+  color: white;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #4ecdc4;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.audiobook-player-error h2 {
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 768px) {
+  .audiobook-player {
+    background: url('https://res.cloudinary.com/do5w3vlu0/image/upload/v1743101305/samples/coffee.jpg') center center/cover repeat-y;
+    background-size: 100% 50vh;
+  }
+
+  .player-header {
+    padding: 1rem;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .player-title {
+    font-size: 1.2rem;
+    margin-left: 1rem;
+  }
+
+  .back-button {
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .player-content {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .thumbnail-section {
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    min-height: auto;
+    gap: 40px;
+    width: 100%;
+  }
+
+  .thumbnail-container {
+    max-width: 300px;
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+  }
+
+  .player-controls {
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+    background: url('https://res.cloudinary.com/do5w3vlu0/image/upload/v1743101305/samples/coffee.jpg') center center/cover no-repeat;
+    position: relative;
+    border-radius: 0;
+  }
+
+  .player-controls::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(56, 56, 50, 0.5);
+    z-index: 1;
+  }
+
+  .track-info,
+  .progress-container,
+  .main-controls,
+  .secondary-controls {
+    position: relative;
+    z-index: 2;
+    padding: 1.5rem;
+    margin: 0;
+  }
+
+  .track-title {
+    font-size: 1.5rem;
+  }
+
+  .play-pause-button {
+    width: 70px;
+    height: 70px;
+  }
+
+  .play-pause-button i {
+    font-size: 2rem;
+  }
+
+  .secondary-controls {
+    gap: 1rem;
+  }
+
+  .rate-buttons {
+    gap: 0.3rem;
+  }
+
+  .rate-button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .rating-section {
+    margin: 1rem 0;
+    gap: 0.8rem;
+  }
+
+  .average-rating,
+  .user-rating {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .rating-label {
+    min-width: auto;
+    font-size: 0.85rem;
+  }
+
+  .star {
+    font-size: 1.1rem;
+  }
+
+  .similar-books-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-bottom: 5.5rem;
+  }
+
+  .similar-books-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  .similar-books-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .similar-book-thumbnail {
+    height: 150px;
+  }
+
+  .similar-book-details {
+    padding: 0.8rem;
+  }
+
+  .similar-book-title {
+    font-size: 0.8rem;
+  }
+
+  .similar-book-author {
+    font-size: 0.7rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .audiobook-player {
+    background: url('https://res.cloudinary.com/do5w3vlu0/image/upload/v1743101305/samples/coffee.jpg') center center/cover repeat-y;
+    background-size: 100% 50vh;
+  }
+
+  .player-header {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    text-align: left;
+  }
+
+  .player-title {
+    margin: 0;
+  }
+
+  .back-button {
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+
+  .player-content {
+    padding: 0;
+    gap: 0;
+  }
+
+  .thumbnail-section {
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+    min-height: auto;
+    gap: 100px;
+    width: 100%;
+  }
+
+  .thumbnail-container {
+    max-width: 250px;
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .player-controls {
+    padding: 0;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+    background: url('https://res.cloudinary.com/do5w3vlu0/image/upload/v1743101305/samples/coffee.jpg') center center/cover no-repeat;
+    position: relative;
+    border-radius: 0;
+  }
+
+  .player-controls::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(56, 56, 50, 0.5);
+    z-index: 1;
+  }
+
+  .track-info,
+  .progress-container,
+  .main-controls,
+  .secondary-controls {
+    position: relative;
+    z-index: 2;
+    padding: 1rem;
+    margin: 0;
+  }
+
+  .track-title {
+    font-size: 1.3rem;
+  }
+
+  .play-pause-button {
+    width: 60px;
+    height: 60px;
+  }
+
+  .play-pause-button i {
+    font-size: 1.8rem;
+  }
+
+  .volume-control,
+  .playback-rate-control {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .rate-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .rating-section {
+    margin: 0.8rem 0;
+    gap: 0.6rem;
+  }
+
+  .average-rating,
+  .user-rating {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+
+  .rating-label {
+    min-width: auto;
+    font-size: 0.8rem;
+  }
+
+  .star {
+    font-size: 1rem;
+  }
+
+  .rating-value {
+    font-size: 0.8rem;
+  }
+
+  .secondary-controls {
+    padding-bottom: 5rem;
+  }
+
+  .similar-books-section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding-bottom: 5rem;
+  }
+
+  .similar-books-title {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .similar-books-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+    justify-content: center !important;
+  }
+
+  .similar-book-thumbnail {
+    height: 120px;
+  }
+
+  .similar-book-details {
+    padding: 0.6rem;
+  }
+
+  .similar-book-title {
+    font-size: 0.75rem;
+  }
+
+  .similar-book-author {
+    font-size: 0.65rem;
+  }
+}
+
+/* Similar Books Section */
+.similar-books-section {
+  margin-top: 0rem;
+  padding: 0rem;
+  background: url('https://res.cloudinary.com/do5w3vlu0/image/upload/v1749677268/20250612_0257_Sunset_Beach_Scene_remix_01jxge4xpdfp69tgpd78kg0rhr_waoglp.png') center center/cover no-repeat;
+  /* border-radius: 16px; */
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  padding-bottom: 6rem;
+  position: relative;
+}
+
+.similar-books-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+  z-index: 1;
+}
+
+.similar-books-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  position: relative;
+  z-index: 2;
+}
+
+.similar-books-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 360px);
+  gap: 8.5rem;
+  max-width: 100%;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.similar-book-card {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.similar-book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.similar-book-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.similar-book-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.similar-book-card:hover .similar-book-thumbnail img {
+  transform: scale(1.05);
+}
+
+.similar-book-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.similar-book-duration {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  align-self: flex-start;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.similar-book-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.similar-book-rating .star {
+  font-size: 0.8rem;
+  color: #ddd;
+}
+
+.similar-book-rating .star.filled {
+  color: #ffd700;
+}
+
+.similar-book-rating .rating-value {
+  font-size: 0.7rem;
+  color: white;
+  margin-left: 0.3rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.similar-book-details {
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.similar-book-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 0.3rem 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.similar-book-author {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-style: italic;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.similar-books-loading,
+.similar-books-empty {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.similar-books-loading p,
+.similar-books-empty p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.similar-books-empty p:last-child {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+/* Quiz Section */
+.quiz-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.quiz-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.quiz-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+}
+
+.quiz-button:active {
+  transform: translateY(0);
+}
+
+.quiz-button i {
+  font-size: 1.2rem;
+}
+
+/* Mobile responsive for quiz button */
+@media screen and (max-width: 768px) {
+  .quiz-section {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+  }
+
+  .quiz-button {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .quiz-button i {
+    font-size: 1.1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .quiz-button {
+    padding: 0.5rem 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .quiz-button i {
+    font-size: 1rem;
+  }
+} 

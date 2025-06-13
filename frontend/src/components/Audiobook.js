@@ -4,6 +4,18 @@ import "./Audiobook.css";
 import { toast } from "react-toastify";
 import config from "../config/config.js";
 
+// Rolling Ball Loading Animation Component
+const RollingBallLoader = () => {
+  return (
+    <div className="rolling-ball-loader">
+      <div className="rolling-ball-container">
+        <div className="rolling-ball"></div>
+        <div className="rolling-track"></div>
+        <div className="loading-text">Loading audiobooks...</div>
+      </div>
+    </div>
+  );
+};
 
 export default function Audiobook() {
   const navigate = useNavigate();
@@ -130,7 +142,7 @@ export default function Audiobook() {
   };
 
   if (loading) {
-    return <div className="loading">Loading audiobooks...</div>;
+    return <RollingBallLoader />;
   }
 
   if (genreGroups.length === 0) {
@@ -167,12 +179,12 @@ export default function Audiobook() {
                       {[...Array(5)].map((_, index) => (
                         <span
                           key={index}
-                          className={`star ${index < Math.floor(book.rating || 0) ? 'filled' : ''}`}
+                          className={`star ${index < Math.floor(book.averageRating || 0) ? 'filled' : ''}`}
                         >
                           ★
                         </span>
                       ))}
-                      <span className="rating-value">({(book.rating || 0).toFixed(1)})</span>
+                      <span className="rating-value">({(book.averageRating || 0).toFixed(1)})</span>
                     </div>
                   </div>
                 </div>
@@ -197,12 +209,12 @@ export default function Audiobook() {
                       {[...Array(5)].map((_, index) => (
                         <span
                           key={index}
-                          className={`star ${index < Math.floor(book.rating || 0) ? 'filled' : ''}`}
+                          className={`star ${index < Math.floor(book.averageRating || 0) ? 'filled' : ''}`}
                         >
                           ★
                         </span>
                       ))}
-                      <span className="rating-value">({(book.rating || 0).toFixed(1)})</span>
+                      <span className="rating-value">({(book.averageRating || 0).toFixed(1)})</span>
                     </div>
                   </div>
                 </div>

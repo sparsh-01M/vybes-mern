@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
     if (genre) {
       const skip = (page - 1) * limit;
       const audiobooks = await Audiobook.find({ genre })
-        .select('title author description genre thumbnailUrl audioUrl duration rating')
+        .select('title author description genre thumbnailUrl audioUrl duration averageRating totalRatings')
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(parseInt(limit));
@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
     const genreGroups = await Promise.all(
       genres.map(async (genre) => {
         const books = await Audiobook.find({ genre })
-          .select('title author description genre thumbnailUrl audioUrl duration rating')
+          .select('title author description genre thumbnailUrl audioUrl duration averageRating totalRatings')
           .sort({ createdAt: -1 })
           .limit(10);
         
@@ -73,6 +73,56 @@ router.get("/audiobook/:id", async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Error fetching audiobook" });
+  }
+});
+
+// Rate an audiobook
+router.post("/rate/:id", async (req, res) => {
+  try {
+    const { rating } = req.body;
+    const { id } = req.params;
+    
+    // Validate audiobook ID
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid audiobook ID" });
+    }
+
+    // Validate rating
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ error: "Rating must be between 1 and 5" });
+    }
+
+    // For now, use a simple user ID (in a real app, this would come from authentication)
+    const userId = req.body.userId || 'anonymous';
+
+    const audiobook = await Audiobook.findById(id);
+    if (!audiobook) {
+      return res.status(404).json({ error: "Audiobook not found" });
+    }
+
+    // Check if user has already rated this audiobook
+    const existingRatingIndex = audiobook.ratings.findIndex(r => r.userId === userId);
+    
+    if (existingRatingIndex !== -1) {
+      // Update existing rating
+      audiobook.ratings[existingRatingIndex].value = rating;
+      audiobook.ratings[existingRatingIndex].createdAt = new Date();
+    } else {
+      // Add new rating
+      audiobook.ratings.push({
+        userId,
+        value: rating,
+        createdAt: new Date()
+      });
+    }
+
+    // Save the audiobook (this will trigger the pre-save middleware to calculate average)
+    await audiobook.save();
+
+    res.json(audiobook);
+  } catch (err) {
+    console.error("Error rating audiobook:", err);
+    res.status(500).json({ error: "Error submitting rating" });
   }
 });
 
@@ -158,5 +208,55 @@ router.get("/audiobook/:id", async (req, res) => {
 //     res.status(500).json({ error: "Error adding sample audiobooks" });
 //   }
 // });
+
+// Add sample questions for testing
+router.post("/add-sample-questions/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid audiobook ID" });
+    }
+
+    // Check if audiobook exists
+    const audiobook = await Audiobook.findById(id);
+    if (!audiobook) {
+      return res.status(404).json({ error: "Audiobook not found" });
+    }
+
+    // Import the Question model
+    const Question = require("../models/question");
+
+    // Check if questions already exist
+    const existingQuestions = await Question.find({ audiobookId: id });
+    if (existingQuestions.length > 0) {
+      return res.json({ 
+        message: "Questions already exist for this audiobook", 
+        count: existingQuestions.length 
+      });
+    }
+
+    // Add sample questions
+    const response = await fetch(`${req.protocol}://${req.get('host')}/questions/add-sample-questions/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add sample questions');
+    }
+
+    const data = await response.json();
+    res.json({ 
+      message: "Sample questions added successfully", 
+      count: data.length 
+    });
+  } catch (error) {
+    console.error("Error adding sample questions:", error);
+    res.status(500).json({ error: "Error adding sample questions" });
+  }
+});
 
 module.exports = router;

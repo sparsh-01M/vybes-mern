@@ -22,6 +22,7 @@ import { SportsFitnessPage } from './pages/SportsFitness';
 import { GamingPage } from './pages/Gaming';
 import { FoodTravelPage } from './pages/FoodTravel';
 import Audiobook from './components/Audiobook';
+import AudiobookPlayer from './components/AudiobookPlayer';
 import AIBot from './components/AIBot';
 import Videos from './pages/Videos';
 
@@ -64,6 +65,7 @@ function App() {
               <Route path="/gaming" element={<GamingPage />} />
               <Route path="/food-travel" element={<FoodTravelPage />} />
               <Route path="/audiobooks" element={<Audiobook />} />
+              <Route path="/audiobook/:id" element={<AudiobookPlayer />} />
               <Route path="/ai-chat" element={<AIBot />} />
               <Route path="/videos" element={<Videos />} />
             </Routes>
