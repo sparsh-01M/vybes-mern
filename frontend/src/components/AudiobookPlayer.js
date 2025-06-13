@@ -152,7 +152,7 @@ export default function AudiobookPlayer() {
   };
 
   const handleBackClick = () => {
-    navigate('/audiobook');
+    navigate('/audiobooks');
   };
 
   const handleRatingSubmit = async (rating) => {
