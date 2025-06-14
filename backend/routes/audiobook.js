@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Audiobook = require("../models/audiobook");
+const requireLogin = require("../middleware/requireLogin");
 
 // Get all audiobooks with genre grouping
 router.get("/", async (req, res) => {
@@ -77,10 +78,14 @@ router.get("/audiobook/:id", async (req, res) => {
 });
 
 // Rate an audiobook
-router.post("/rate/:id", async (req, res) => {
+router.post("/rate/:id", requireLogin, async (req, res) => {
   try {
     const { rating } = req.body;
     const { id } = req.params;
+    
+    console.log('Rating request received:', { rating, audiobookId: id });
+    console.log('User from middleware:', req.user);
+    console.log('User ID:', req.user._id);
     
     // Validate audiobook ID
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -92,23 +97,29 @@ router.post("/rate/:id", async (req, res) => {
       return res.status(400).json({ error: "Rating must be between 1 and 5" });
     }
 
-    // For now, use a simple user ID (in a real app, this would come from authentication)
-    const userId = req.body.userId || 'anonymous';
+    // Get user ID from the authenticated user
+    const userId = req.user._id.toString();
 
     const audiobook = await Audiobook.findById(id);
     if (!audiobook) {
       return res.status(404).json({ error: "Audiobook not found" });
     }
 
+    console.log('Before update - Ratings:', audiobook.ratings);
+    console.log('Before update - Average Rating:', audiobook.averageRating);
+    console.log('Before update - Total Ratings:', audiobook.totalRatings);
+
     // Check if user has already rated this audiobook
     const existingRatingIndex = audiobook.ratings.findIndex(r => r.userId === userId);
     
     if (existingRatingIndex !== -1) {
       // Update existing rating
+      console.log('Updating existing rating for user:', userId);
       audiobook.ratings[existingRatingIndex].value = rating;
       audiobook.ratings[existingRatingIndex].createdAt = new Date();
     } else {
       // Add new rating
+      console.log('Adding new rating for user:', userId);
       audiobook.ratings.push({
         userId,
         value: rating,
@@ -116,8 +127,24 @@ router.post("/rate/:id", async (req, res) => {
       });
     }
 
-    // Save the audiobook (this will trigger the pre-save middleware to calculate average)
+    console.log('After update - Ratings:', audiobook.ratings);
+
+    // Manually calculate average rating to ensure it's correct
+    if (audiobook.ratings.length > 0) {
+      const sum = audiobook.ratings.reduce((acc, rating) => acc + rating.value, 0);
+      audiobook.averageRating = sum / audiobook.ratings.length;
+      audiobook.totalRatings = audiobook.ratings.length;
+      console.log('Calculated - Sum:', sum, 'Count:', audiobook.ratings.length, 'Average:', audiobook.averageRating);
+    } else {
+      audiobook.averageRating = 0;
+      audiobook.totalRatings = 0;
+    }
+
+    // Save the audiobook
     await audiobook.save();
+
+    console.log('After save - Average Rating:', audiobook.averageRating);
+    console.log('After save - Total Ratings:', audiobook.totalRatings);
 
     res.json(audiobook);
   } catch (err) {
@@ -256,6 +283,37 @@ router.post("/add-sample-questions/:id", async (req, res) => {
   } catch (error) {
     console.error("Error adding sample questions:", error);
     res.status(500).json({ error: "Error adding sample questions" });
+  }
+});
+
+// Recalculate all audiobooks' average ratings (for fixing existing data)
+router.post("/recalculate-ratings", async (req, res) => {
+  try {
+    const audiobooks = await Audiobook.find({});
+    let updatedCount = 0;
+    
+    for (const audiobook of audiobooks) {
+      if (audiobook.ratings.length > 0) {
+        const sum = audiobook.ratings.reduce((acc, rating) => acc + rating.value, 0);
+        audiobook.averageRating = sum / audiobook.ratings.length;
+        audiobook.totalRatings = audiobook.ratings.length;
+        await audiobook.save();
+        updatedCount++;
+      } else {
+        audiobook.averageRating = 0;
+        audiobook.totalRatings = 0;
+        await audiobook.save();
+        updatedCount++;
+      }
+    }
+    
+    res.json({ 
+      message: `Recalculated ratings for ${updatedCount} audiobooks`,
+      updatedCount 
+    });
+  } catch (err) {
+    console.error("Error recalculating ratings:", err);
+    res.status(500).json({ error: "Error recalculating ratings" });
   }
 });
 

@@ -72,13 +72,18 @@ const audiobookSchema = new mongoose.Schema({
 
 // Calculate average rating before saving
 audiobookSchema.pre('save', function(next) {
+  console.log('Pre-save middleware triggered');
+  console.log('Current ratings:', this.ratings);
+  
   if (this.ratings.length > 0) {
     const sum = this.ratings.reduce((acc, rating) => acc + rating.value, 0);
     this.averageRating = sum / this.ratings.length;
     this.totalRatings = this.ratings.length;
+    console.log('Pre-save calculated average:', this.averageRating, 'from', this.totalRatings, 'ratings');
   } else {
     this.averageRating = 0;
     this.totalRatings = 0;
+    console.log('Pre-save: No ratings, setting defaults');
   }
   next();
 });

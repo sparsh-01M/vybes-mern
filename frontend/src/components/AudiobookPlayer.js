@@ -30,6 +30,7 @@ export default function AudiobookPlayer() {
   useEffect(() => {
     if (audiobook) {
       fetchSimilarBooks();
+      checkUserRating();
     }
   }, [audiobook]);
 
@@ -78,6 +79,23 @@ export default function AudiobookPlayer() {
       console.error('Error fetching similar books:', error);
     } finally {
       setLoadingSimilar(false);
+    }
+  };
+
+  const checkUserRating = () => {
+    const token = localStorage.getItem("jwt");
+    if (!token) return;
+    
+    try {
+      const userData = JSON.parse(localStorage.getItem("user"));
+      if (userData && userData._id && audiobook && audiobook.ratings) {
+        const userRating = audiobook.ratings.find(r => r.userId === userData._id);
+        if (userRating) {
+          setUserRating(userRating.value);
+        }
+      }
+    } catch (error) {
+      console.log('Could not check user rating:', error);
     }
   };
 
@@ -160,19 +178,48 @@ export default function AudiobookPlayer() {
     
     setIsSubmittingRating(true);
     try {
+      const token = localStorage.getItem("jwt");
+      const userData = localStorage.getItem("user");
+      
+      console.log('=== FRONTEND RATING DEBUG ===');
+      console.log('Token exists:', !!token);
+      console.log('Token (first 50 chars):', token ? token.substring(0, 50) + '...' : 'No token');
+      console.log('Token length:', token ? token.length : 0);
+      console.log('User data exists:', !!userData);
+      console.log('User data:', userData);
+      
+      if (!token) {
+        toast.error('Please login to rate audiobooks');
+        setIsSubmittingRating(false);
+        return;
+      }
+      
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      };
+      
+      console.log('Request headers:', headers);
+      
       const response = await fetch(`${config.BACKEND_URL}/audiobooks/rate/${id}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: headers,
         body: JSON.stringify({ rating }),
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
       if (!response.ok) {
+        const errorText = await response.text();
+        console.log('Error response:', errorText);
         throw new Error('Failed to submit rating');
       }
 
       const updatedAudiobook = await response.json();
+      console.log('Updated audiobook:', updatedAudiobook);
+      console.log('=== END FRONTEND DEBUG ===');
+      
       setAudiobook(updatedAudiobook);
       setUserRating(rating);
       toast.success('Rating submitted successfully!');
@@ -219,7 +266,8 @@ export default function AudiobookPlayer() {
   };
 
   const calculateAverageRating = () => {
-    return audiobook.averageRating || 0;
+    if (!audiobook || !audiobook.averageRating) return 0;
+    return Number(audiobook.averageRating.toFixed(1));
   };
 
   if (loading) {
@@ -291,7 +339,7 @@ export default function AudiobookPlayer() {
                         {star <= calculateAverageRating() ? 'star' : 'star_border'}
                       </i>
                     ))}
-                    <span className="rating-value">({calculateAverageRating()})</span>
+                    <span className="rating-value">({calculateAverageRating()}) - {audiobook.totalRatings || 0} ratings</span>
                   </div>
                 </div>
                 

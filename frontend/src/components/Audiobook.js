@@ -184,7 +184,7 @@ export default function Audiobook() {
                           ★
                         </span>
                       ))}
-                      <span className="rating-value">({(book.averageRating || 0).toFixed(1)})</span>
+                      <span className="rating-value">({(book.averageRating || 0).toFixed(1)}) - {book.totalRatings || 0} ratings</span>
                     </div>
                   </div>
                 </div>
@@ -214,7 +214,7 @@ export default function Audiobook() {
                           ★
                         </span>
                       ))}
-                      <span className="rating-value">({(book.averageRating || 0).toFixed(1)})</span>
+                      <span className="rating-value">({(book.averageRating || 0).toFixed(1)}) - {book.totalRatings || 0} ratings</span>
                     </div>
                   </div>
                 </div>
